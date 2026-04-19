@@ -9,3 +9,15 @@ body,
     overflow: hidden;
     background-color: lightgoldenrodyellow;
 }
+
+.label > div {
+    font-family: Helvetica, Arial, sans-serif;
+    position: absolute;
+    background: #00000088;
+    color: white;
+    padding: 15px;
+    white-space: nowrap;
+    overflow: hidden;
+    border-radius: 30px;
+    user-select: none;
+}
