@@ -1,15 +1,16 @@
-import { useFrame } from '@react-three/fiber'
+import { useFrame, useThree } from '@react-three/fiber'
 import {
     AccumulativeShadows,
     BakeShadows,
     ContactShadows,
+    Environment,
     OrbitControls,
     RandomizedLight,
     Sky,
     SoftShadows,
     useHelper
 } from '@react-three/drei'
-import { useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import { button, useControls } from 'leva'
 import { Perf } from 'r3f-perf'
 import * as THREE from 'three'
@@ -65,7 +66,7 @@ export default function Experience()
             max: 1
         },
         blur: {
-            value: 1,
+            value: 3,
             min: 0,
             max: 10
         }
@@ -75,7 +76,34 @@ export default function Experience()
         sunPosition: { value: [ 1, 2, 3 ] }
     })
 
+    const { envMapIntensity } = useControls('enviroment map', {
+        envMapIntensity: {
+            value: 2.5,
+            min: 0,
+            max: 12
+        }
+    })
+
+    const scene = useThree(state => state.scene)
+
+    useEffect(() => {
+        scene.environmentIntensity = envMapIntensity
+    }, [ envMapIntensity ])
+
     return <>
+
+        <Environment
+            background
+            // files={ [
+            //     './environmentMaps/2/px.jpg',
+            //     './environmentMaps/2/nx.jpg',
+            //     './environmentMaps/2/py.jpg',
+            //     './environmentMaps/2/ny.jpg',
+            //     './environmentMaps/2/pz.jpg',
+            //     './environmentMaps/2/nz.jpg',
+            // ] }
+            files="./environmentMaps/the_sky_is_on_fire_2k.hdr"
+        ></Environment>
         
         {/* <BakeShadows /> */}
         {/* <SoftShadows size={ 25 } samples={ 10 } focus={ 0 } /> */}
@@ -115,7 +143,7 @@ export default function Experience()
             blur={ blur }
         />
 
-        <directionalLight
+        {/* <directionalLight
             ref={ directionalLight }
             // castShadow
             // position={ [ 1, 2, 3 ] }
@@ -128,10 +156,10 @@ export default function Experience()
             shadow-camera-right={ 5 }
             shadow-camera-bottom={ -5 }
             shadow-camera-left={ -5 }
-        />
-        <ambientLight intensity={ 1.5 } />
+        /> */}
+        {/* <ambientLight intensity={ 1.5 } /> */}
 
-        <Sky sunPosition={ sunPosition } />
+        {/* <Sky sunPosition={ sunPosition } /> */}
 
         <mesh castShadow position={ [ position.x, position.y, 0 ] } visible={ visible }>
             <sphereGeometry />
