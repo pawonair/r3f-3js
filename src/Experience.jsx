@@ -4,6 +4,7 @@ import {
     BakeShadows,
     ContactShadows,
     Environment,
+    Lightformer,
     OrbitControls,
     RandomizedLight,
     Sky,
@@ -34,7 +35,7 @@ export default function Experience()
 
     const { position, color, visible } = useControls('sphere', {
         position: {
-            value: { x: -2, y: 0 },
+            value: { x: -2, y: 1 },
             step: 0.01,
             joystick: 'invertY'
         },
@@ -59,7 +60,7 @@ export default function Experience()
     })
 
     const { shadowColor, opacity, blur} = useControls('contact-shadows', {
-        shadowColor: '#000000',
+        shadowColor: '#4b2709',
         opacity: {
             value: 0.5,
             min: 0,
@@ -76,12 +77,32 @@ export default function Experience()
         sunPosition: { value: [ 1, 2, 3 ] }
     })
 
-    const { envMapIntensity } = useControls('enviroment map', {
+    const {
+        envMapIntensity,
+        envMapHeight,
+        envMapRadius,
+        envMapScale
+    } = useControls('enviroment map', {
         envMapIntensity: {
             value: 2.5,
             min: 0,
             max: 12
-        }
+        },
+        envMapHeight: {
+            value: 7,
+            min: 0,
+            max: 100
+        },
+        envMapRadius: {
+            value: 28,
+            min: 10,
+            max: 1000
+        },
+        envMapScale: {
+            value: 100,
+            min: 10,
+            max: 1000
+        },
     })
 
     const scene = useThree(state => state.scene)
@@ -93,7 +114,7 @@ export default function Experience()
     return <>
 
         <Environment
-            background
+            // background
             // files={ [
             //     './environmentMaps/2/px.jpg',
             //     './environmentMaps/2/nx.jpg',
@@ -102,8 +123,31 @@ export default function Experience()
             //     './environmentMaps/2/pz.jpg',
             //     './environmentMaps/2/nz.jpg',
             // ] }
-            files="./environmentMaps/the_sky_is_on_fire_2k.hdr"
-        ></Environment>
+            // files="./environmentMaps/the_sky_is_on_fire_2k.hdr"
+            preset="sunset"
+            ground={
+                {
+                    height: envMapHeight,
+                    radius: envMapRadius,
+                    scale: envMapScale
+                }
+            }
+        >
+            {/* Custom environment maps */}
+            {/* <color args={ [ '#000000' ] } attach="background" /> */}
+            {/* <mesh position-z={ -5 } scale={ 10 }>
+                <planeGeometry />
+                <meshBasicMaterial color={ [ 10, 0, 0 ] } />
+            </mesh> */}
+            {/* <Lightformer
+                position-z={ -5 }
+                scale={ 10 }
+                color="red"
+                intensity={ 10 }
+                form="ring"
+            /> */}
+        </Environment>
+
         
         {/* <BakeShadows /> */}
         {/* <SoftShadows size={ 25 } samples={ 10 } focus={ 0 } /> */}
@@ -135,7 +179,7 @@ export default function Experience()
         </AccumulativeShadows> */}
 
         <ContactShadows
-            position={ [ 0, -0.99, 0 ] }
+            position={ [ 0, 0, 0 ] }
             scale={ 10 }
             resolution={ 512 }
             color={ shadowColor }
@@ -166,15 +210,15 @@ export default function Experience()
             <meshStandardMaterial color={ color } />
         </mesh>
 
-        <mesh castShadow ref={ cube } position-x={ 2 } scale={ scale }>
+        <mesh castShadow ref={ cube } position-x={ 2 } position-y={ 1 } scale={ scale }>
             <boxGeometry />
             <meshStandardMaterial color="mediumpurple" />
         </mesh>
 
-        <mesh receiveShadow position-y={ - 1 } rotation-x={ - Math.PI * 0.5 } scale={ 10 }>
+        {/* <mesh receiveShadow position-y={ 0 } rotation-x={ - Math.PI * 0.5 } scale={ 10 }>
             <planeGeometry />
             <meshStandardMaterial color="greenyellow" />
-        </mesh>
+        </mesh> */}
 
     </>
 }
