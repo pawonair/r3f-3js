@@ -1,5 +1,12 @@
 import { useFrame } from '@react-three/fiber'
-import { BakeShadows, OrbitControls, SoftShadows, useHelper } from '@react-three/drei'
+import {
+    AccumulativeShadows,
+    BakeShadows,
+    OrbitControls,
+    RandomizedLight,
+    SoftShadows,
+    useHelper
+} from '@react-three/drei'
 import { useRef } from 'react'
 import { button, useControls } from 'leva'
 import { Perf } from 'r3f-perf'
@@ -8,11 +15,13 @@ import * as THREE from 'three'
 export default function Experience()
 {
     const directionalLight = useRef()
-    useHelper(directionalLight, THREE.DirectionalLightHelper, 1)
+    // useHelper(directionalLight, THREE.DirectionalLightHelper, 1)
 
     const cube = useRef()
 
     useFrame((state, delta) => {
+        const time = state.clock.elapsedTime
+        cube.current.position.x = 2 + Math.sin(time)
         cube.current.rotation.y += delta * 0.2
     })
 
@@ -49,7 +58,7 @@ export default function Experience()
     return <>
         
         {/* <BakeShadows /> */}
-        <SoftShadows size={ 25 } samples={ 10 } focus={ 0 } />
+        {/* <SoftShadows size={ 25 } samples={ 10 } focus={ 0 } /> */}
 
         <color args={ [ 'ivory' ] } attach="background" />
 
@@ -57,11 +66,30 @@ export default function Experience()
 
         <OrbitControls makeDefault />
 
+        <AccumulativeShadows
+            position={ [ 0, -0.99, 0 ] }
+            scale={ 10 }
+            color='#316d39'
+            opacity={ 0.8 }
+            frames={ Infinity }
+            temporal
+            blend={ 100 }
+        >
+            <RandomizedLight
+                amount={ 8 }
+                radius={ 1 }
+                ambient={ 0.5 }
+                intensity={ 3 }
+                position={ [ 1, 2, 3 ] }
+                bias={ 0.001 }
+            />
+        </AccumulativeShadows>
+
         <directionalLight
             ref={ directionalLight }
-            castShadow position={ [ 1, 2, 3 ] }
+            // castShadow
+            position={ [ 1, 2, 3 ] }
             intensity={ 4.5 }
-            castShadow
             shadow-mapSize={ [ 1024, 1024] }
             shadow-camera-near={ 1 }
             shadow-camera-far={ 10 }
