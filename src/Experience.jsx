@@ -5,6 +5,7 @@ import {
     ContactShadows,
     OrbitControls,
     RandomizedLight,
+    Sky,
     SoftShadows,
     useHelper
 } from '@react-three/drei'
@@ -70,6 +71,10 @@ export default function Experience()
         }
     })
 
+    const { sunPosition } = useControls('sky', {
+        sunPosition: { value: [ 1, 2, 3 ] }
+    })
+
     return <>
         
         {/* <BakeShadows /> */}
@@ -108,13 +113,13 @@ export default function Experience()
             color={ shadowColor }
             opacity={ opacity }
             blur={ blur }
-            frames={ 1 }
         />
 
         <directionalLight
             ref={ directionalLight }
             // castShadow
-            position={ [ 1, 2, 3 ] }
+            // position={ [ 1, 2, 3 ] }
+            position={ sunPosition }
             intensity={ 4.5 }
             shadow-mapSize={ [ 1024, 1024] }
             shadow-camera-near={ 1 }
@@ -125,6 +130,8 @@ export default function Experience()
             shadow-camera-left={ -5 }
         />
         <ambientLight intensity={ 1.5 } />
+
+        <Sky sunPosition={ sunPosition } />
 
         <mesh castShadow position={ [ position.x, position.y, 0 ] } visible={ visible }>
             <sphereGeometry />
