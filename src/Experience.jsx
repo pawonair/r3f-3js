@@ -2,6 +2,7 @@ import { useFrame } from '@react-three/fiber'
 import {
     AccumulativeShadows,
     BakeShadows,
+    ContactShadows,
     OrbitControls,
     RandomizedLight,
     SoftShadows,
@@ -15,13 +16,13 @@ import * as THREE from 'three'
 export default function Experience()
 {
     const directionalLight = useRef()
-    // useHelper(directionalLight, THREE.DirectionalLightHelper, 1)
+    useHelper(directionalLight, THREE.DirectionalLightHelper, 1)
 
     const cube = useRef()
 
     useFrame((state, delta) => {
-        const time = state.clock.elapsedTime
-        cube.current.position.x = 2 + Math.sin(time)
+        // const time = state.clock.elapsedTime
+        // cube.current.position.x = 2 + Math.sin(time)
         cube.current.rotation.y += delta * 0.2
     })
 
@@ -55,6 +56,20 @@ export default function Experience()
         }
     })
 
+    const { shadowColor, opacity, blur} = useControls('contact-shadows', {
+        shadowColor: '#000000',
+        opacity: {
+            value: 0.5,
+            min: 0,
+            max: 1
+        },
+        blur: {
+            value: 1,
+            min: 0,
+            max: 10
+        }
+    })
+
     return <>
         
         {/* <BakeShadows /> */}
@@ -66,7 +81,8 @@ export default function Experience()
 
         <OrbitControls makeDefault />
 
-        <AccumulativeShadows
+        {/* Good for static or slow moving objects */}
+        {/* <AccumulativeShadows 
             position={ [ 0, -0.99, 0 ] }
             scale={ 10 }
             color='#316d39'
@@ -83,7 +99,17 @@ export default function Experience()
                 position={ [ 1, 2, 3 ] }
                 bias={ 0.001 }
             />
-        </AccumulativeShadows>
+        </AccumulativeShadows> */}
+
+        <ContactShadows
+            position={ [ 0, -0.99, 0 ] }
+            scale={ 10 }
+            resolution={ 512 }
+            color={ shadowColor }
+            opacity={ opacity }
+            blur={ blur }
+            frames={ 1 }
+        />
 
         <directionalLight
             ref={ directionalLight }
