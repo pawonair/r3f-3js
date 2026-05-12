@@ -1,3 +1,4 @@
+import { useFrame } from '@react-three/fiber'
 import { OrbitControls } from '@react-three/drei'
 import { button, useControls } from 'leva'
 import { Perf } from 'r3f-perf'
@@ -14,7 +15,7 @@ export default function Experience()
             step: 0.01,
             joystick: 'invertY'
         },
-        color: '#ff0000',
+        color: 'orange',
         visible: true,
         myInterval: {
             min: 0,
@@ -35,6 +36,8 @@ export default function Experience()
     })
 
     return <>
+        <color args={[ '#ff0000' ]} attach="background" />
+        
         { perfVisible && <Perf position='top-left' /> }
 
         <OrbitControls makeDefault />
