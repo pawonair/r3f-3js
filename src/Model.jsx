@@ -1,16 +1,6 @@
 import { Clone, useGLTF } from '@react-three/drei'
 
 export default function Model() {
-    // const model = useLoader(
-    //     GLTFLoader,
-    //     './hamburger.glb',
-    //     (loader) => {
-    //         const dracoLoader = new DRACOLoader()
-    //         dracoLoader.setDecoderPath('./draco/')
-    //         loader.setDRACOLoader(dracoLoader)
-    //     }
-    // )
-
     const model = useGLTF('./hamburger-draco.glb')
 
     return <>
