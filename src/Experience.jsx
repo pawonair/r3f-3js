@@ -1,7 +1,8 @@
 import { Center, OrbitControls, Text3D, useMatcapTexture } from '@react-three/drei'
 import { Perf } from 'r3f-perf'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import * as THREE from 'three'
+import { useFrame } from '@react-three/fiber'
 
 // ThreeJS nativ optimization
 const torusGeometry = new THREE.TorusGeometry(1, 0.6, 16, 32)
@@ -12,6 +13,10 @@ export default function Experience()
     // // Internal optimization
     // const [ torusGeometry, setTorusGeometry ] = useState()
     // const [ material, setMaterial ] = useState()
+   
+    const donutsGroup = useRef()
+
+    const [ matcapTexture ] = useMatcapTexture('7B5254_E9DCC7_B19986_C8AC91', 256)
 
     useEffect(() => {
         matcapTexture.encoding = THREE.SRGBColorSpace
@@ -21,7 +26,11 @@ export default function Experience()
         material.needsUpdate = true
     }, [])
 
-    const [ matcapTexture ] = useMatcapTexture('7B5254_E9DCC7_B19986_C8AC91', 256)
+    useFrame((state, delta) => {
+        for (const donut of donutsGroup.current.children) {
+            donut.rotation.y += delta * 0.2
+        }
+    })
 
     return <>
 
@@ -49,24 +58,26 @@ export default function Experience()
             </Text3D>
         </Center>
 
-        {[...Array(100)].map((val, i) => 
-            <mesh
-                key={i}
-                geometry={ torusGeometry }
-                material={ material }
-                position={[
-                    (Math.random() - 0.5) * 10,
-                    (Math.random() - 0.5) * 10,
-                    (Math.random() - 0.5) * 10
-                ]}
-                scale={ 0.2 + Math.random() * 0.2 }
-                rotation={[
-                    Math.random() * Math.PI,
-                    Math.random() * Math.PI,
-                    0
-                ]}
-            />
-        )}
+        <group ref={ donutsGroup }>    
+            {[...Array(100)].map((val, i) => 
+                <mesh
+                    key={i}
+                    geometry={ torusGeometry }
+                    material={ material }
+                    position={[
+                        (Math.random() - 0.5) * 10,
+                        (Math.random() - 0.5) * 10,
+                        (Math.random() - 0.5) * 10
+                    ]}
+                    scale={ 0.2 + Math.random() * 0.2 }
+                    rotation={[
+                        Math.random() * Math.PI,
+                        Math.random() * Math.PI,
+                        0
+                    ]}
+                />
+            )}
+        </group>
 
     </>
 }
