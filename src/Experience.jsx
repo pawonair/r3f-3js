@@ -2,9 +2,20 @@ import { OrbitControls } from '@react-three/drei'
 import { Perf } from 'r3f-perf'
 import { Bloom, DepthOfField, EffectComposer, Glitch, Noise, ToneMapping, Vignette } from '@react-three/postprocessing'
 import { BlendFunction, ToneMappingMode } from 'postprocessing'
+import { useRef } from 'react'
+import { useControls } from 'leva'
+
+import Drunk from './Drunk'
 
 export default function Experience()
 {
+    const drunkRef = useRef()
+
+    const drunkProps = useControls('Drunk Effect', {
+        frequency: { value: 2, min: 1, max: 20 },
+        amplitude: { value: 0.1, min: 0, max: 1 },
+    })
+
     return <>
 
         <color args={ ['#ffffff'] } attach="background" />
@@ -39,6 +50,11 @@ export default function Experience()
                 focalLength={ 0.025 }
                 bokehScale={ 5 }
             /> */}
+
+            <Drunk
+                ref={ drunkRef }
+                { ...drunkProps }
+            />
 
             {/* Always at the end */}
             <ToneMapping mode={ ToneMappingMode.ACES_FILMIC } />
