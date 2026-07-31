@@ -54,6 +54,7 @@ export default function Experience()
             <Drunk
                 ref={ drunkRef }
                 { ...drunkProps }
+                blendFunction={ BlendFunction.MULTIPLY }
             />
 
             {/* Always at the end */}
