@@ -1,67 +1,31 @@
-import { ContactShadows, Environment, Float, Html, PresentationControls, Text, useGLTF } from '@react-three/drei'
+import { OrbitControls } from '@react-three/drei'
+import { Perf } from 'r3f-perf'
 
 export default function Experience()
 {
-    const computer = useGLTF('https://threejs-journey.com/resources/models/macbook_model.gltf')
-
     return <>
 
-        <Environment preset='city' />
+        <Perf position="top-left" />
 
-        <color args={ ['#241a1a'] } attach="background" />
+        <OrbitControls makeDefault />
 
-        <PresentationControls
-            global
-            rotation={ [0.13, 0.1, 0] }
-            polar={ [-.04, 0.2] }
-            azimuth={ [-1, 0.75] }
-            damping={ 0.1 }
-            config={ {mass: 2, tension: 400} }
-            snap    
-        >
-            <Float rotationIntensity={ 0.4 }>
-                <rectAreaLight
-                    width={ 2.5 }
-                    height={ 1.65 }
-                    intensity={ 65 }
-                    color={ '#eaeaea' }
-                    rotation={ [0.1, Math.PI, 0] }
-                    position={ [0, 0.55, -1.15] }
-                />
-                <primitive
-                    object={ computer.scene }
-                    position-y={ -1.2 }
-                >
-                    <Html
-                        transform
-                        wrapperClass='htmlScreen'
-                        distanceFactor={ 1.17 }
-                        position={ [0, 1.56, -1.4] }
-                        rotation-x={ -0.256 }
-                    >
-                        <iframe src='https://pawansunuwar.com.np' />
-                    </Html>
-                </primitive>
+        <directionalLight castShadow position={ [ 1, 2, 3 ] } intensity={ 4.5 } />
+        <ambientLight intensity={ 1.5 } />
 
-                <Text
-                    font='./bangers-v20-latin-regular.woff'
-                    fontSize={ 0.75 }
-                    position={ [2, 0.75, 0.85] }
-                    rotation-y={ -1.25 }
-                    maxWidth={ 2 }
-                    textAlign='left'
-                >
-                    Pawan Sunuwar
-                </Text>
-            </Float>
-        </PresentationControls>
+        <mesh castShadow position={ [ - 2, 2, 0 ] }>
+            <sphereGeometry />
+            <meshStandardMaterial color="orange" />
+        </mesh>
 
-        <ContactShadows
-            position-y={ -1.4 }
-            opacity={ 0.4 }
-            scale={ 5 }
-            blur={ 2.4 }
-        />
+        <mesh castShadow position={ [ 2, 2, 0 ] }>
+            <boxGeometry />
+            <meshStandardMaterial color="mediumpurple" />
+        </mesh>
+
+        <mesh receiveShadow position-y={ - 1.25 }>
+            <boxGeometry args={ [ 10, 0.5, 10 ] } />
+            <meshStandardMaterial color="greenyellow" />
+        </mesh>
 
     </>
 }
