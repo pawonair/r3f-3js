@@ -1,238 +1,67 @@
-import { useFrame, useThree } from '@react-three/fiber'
-import {
-    AccumulativeShadows,
-    BakeShadows,
-    ContactShadows,
-    Environment,
-    Lightformer,
-    OrbitControls,
-    RandomizedLight,
-    Sky,
-    SoftShadows,
-    Stage,
-    useHelper
-} from '@react-three/drei'
-import { useEffect, useRef } from 'react'
-import { button, useControls } from 'leva'
-import { Perf } from 'r3f-perf'
-import * as THREE from 'three'
+import { ContactShadows, Environment, Float, Html, PresentationControls, Text, useGLTF } from '@react-three/drei'
 
 export default function Experience()
 {
-    const directionalLight = useRef()
-    useHelper(directionalLight, THREE.DirectionalLightHelper, 1)
-
-    const cube = useRef()
-
-    useFrame((state, delta) => {
-        // const time = state.clock.elapsedTime
-        // cube.current.position.x = 2 + Math.sin(time)
-        cube.current.rotation.y += delta * 0.2
-    })
-
-    const { perfVisible } = useControls({
-        perfVisible: true
-    })
-
-    const { position, color, visible } = useControls('sphere', {
-        position: {
-            value: { x: -2, y: 1 },
-            step: 0.01,
-            joystick: 'invertY'
-        },
-        color: 'orange',
-        visible: true,
-        myInterval: {
-            min: 0,
-            max: 10,
-            value: [4, 5]
-        },
-        clickMe: button(() => { console.log('ok') }),
-        choice: { options: ['a', 'b', 'c'] }
-    })
-
-    const { scale } = useControls('cube', {
-        scale: {
-            value: 1.5,
-            step: 0.01,
-            min: 0,
-            max: 5
-        }
-    })
-
-    const { shadowColor, opacity, blur} = useControls('contact-shadows', {
-        shadowColor: '#4b2709',
-        opacity: {
-            value: 0.5,
-            min: 0,
-            max: 1
-        },
-        blur: {
-            value: 3,
-            min: 0,
-            max: 10
-        }
-    })
-
-    const { sunPosition } = useControls('sky', {
-        sunPosition: { value: [ 1, 2, 3 ] }
-    })
-
-    const {
-        envMapIntensity,
-        envMapHeight,
-        envMapRadius,
-        envMapScale
-    } = useControls('enviroment map', {
-        envMapIntensity: {
-            value: 2.5,
-            min: 0,
-            max: 12
-        },
-        envMapHeight: {
-            value: 7,
-            min: 0,
-            max: 100
-        },
-        envMapRadius: {
-            value: 28,
-            min: 10,
-            max: 1000
-        },
-        envMapScale: {
-            value: 100,
-            min: 10,
-            max: 1000
-        },
-    })
-
-    // const scene = useThree(state => state.scene)
-
-    // useEffect(() => {
-    //     scene.environmentIntensity = envMapIntensity
-    // }, [ envMapIntensity ])
+    const computer = useGLTF('https://threejs-journey.com/resources/models/macbook_model.gltf')
 
     return <>
 
-        {/* <Environment
-            // background
-            // files={ [
-            //     './environmentMaps/2/px.jpg',
-            //     './environmentMaps/2/nx.jpg',
-            //     './environmentMaps/2/py.jpg',
-            //     './environmentMaps/2/ny.jpg',
-            //     './environmentMaps/2/pz.jpg',
-            //     './environmentMaps/2/nz.jpg',
-            // ] }
-            // files="./environmentMaps/the_sky_is_on_fire_2k.hdr"
-            preset="sunset"
-            ground={
-                {
-                    height: envMapHeight,
-                    radius: envMapRadius,
-                    scale: envMapScale
-                }
-            }
-        > */}
-            {/* Custom environment maps */}
-            {/* <color args={ [ '#000000' ] } attach="background" /> */}
-            {/* <mesh position-z={ -5 } scale={ 10 }>
-                <planeGeometry />
-                <meshBasicMaterial color={ [ 10, 0, 0 ] } />
-            </mesh> */}
-            {/* <Lightformer
-                position-z={ -5 }
-                scale={ 10 }
-                color="red"
-                intensity={ 10 }
-                form="ring"
-            /> */}
-        {/* </Environment> */}
+        <Environment preset='city' />
 
-        
-        {/* <BakeShadows /> */}
-        {/* <SoftShadows size={ 25 } samples={ 10 } focus={ 0 } /> */}
+        <color args={ ['#241a1a'] } attach="background" />
 
-        <color args={ [ 'ivory' ] } attach="background" />
-
-        { perfVisible && <Perf position='top-left' /> }
-
-        <OrbitControls makeDefault />
-
-        {/* Good for static or slow moving objects */}
-        {/* <AccumulativeShadows 
-            position={ [ 0, -0.99, 0 ] }
-            scale={ 10 }
-            color='#316d39'
-            opacity={ 0.8 }
-            frames={ Infinity }
-            temporal
-            blend={ 100 }
+        <PresentationControls
+            global
+            rotation={ [0.13, 0.1, 0] }
+            polar={ [-.04, 0.2] }
+            azimuth={ [-1, 0.75] }
+            damping={ 0.1 }
+            config={ {mass: 2, tension: 400} }
+            snap    
         >
-            <RandomizedLight
-                amount={ 8 }
-                radius={ 1 }
-                ambient={ 0.5 }
-                intensity={ 3 }
-                position={ [ 1, 2, 3 ] }
-                bias={ 0.001 }
-            />
-        </AccumulativeShadows> */}
+            <Float rotationIntensity={ 0.4 }>
+                <rectAreaLight
+                    width={ 2.5 }
+                    height={ 1.65 }
+                    intensity={ 65 }
+                    color={ '#eaeaea' }
+                    rotation={ [0.1, Math.PI, 0] }
+                    position={ [0, 0.55, -1.15] }
+                />
+                <primitive
+                    object={ computer.scene }
+                    position-y={ -1.2 }
+                >
+                    <Html
+                        transform
+                        wrapperClass='htmlScreen'
+                        distanceFactor={ 1.17 }
+                        position={ [0, 1.56, -1.4] }
+                        rotation-x={ -0.256 }
+                    >
+                        <iframe src='https://pawansunuwar.com.np' />
+                    </Html>
+                </primitive>
 
-        {/* <ContactShadows
-            position={ [ 0, 0, 0 ] }
-            scale={ 10 }
-            resolution={ 512 }
-            color={ shadowColor }
-            opacity={ opacity }
-            blur={ blur }
-        /> */}
+                <Text
+                    font='./bangers-v20-latin-regular.woff'
+                    fontSize={ 0.75 }
+                    position={ [2, 0.75, 0.85] }
+                    rotation-y={ -1.25 }
+                    maxWidth={ 2 }
+                    textAlign='left'
+                >
+                    Pawan Sunuwar
+                </Text>
+            </Float>
+        </PresentationControls>
 
-        {/* <directionalLight
-            ref={ directionalLight }
-            // castShadow
-            // position={ [ 1, 2, 3 ] }
-            position={ sunPosition }
-            intensity={ 4.5 }
-            shadow-mapSize={ [ 1024, 1024] }
-            shadow-camera-near={ 1 }
-            shadow-camera-far={ 10 }
-            shadow-camera-top={ 5 }
-            shadow-camera-right={ 5 }
-            shadow-camera-bottom={ -5 }
-            shadow-camera-left={ -5 }
-        /> */}
-        {/* <ambientLight intensity={ 1.5 } /> */}
-
-        {/* <Sky sunPosition={ sunPosition } /> */}
-
-        <Stage
-            shadows={
-                {
-                    type: 'contact',
-                    opacity: 0.2,
-                    blur: 3
-                }
-            }
-            environment="sunset"
-            preset="portrait"
-            intensity={ envMapIntensity }
-        >
-            <mesh castShadow position={ [ position.x, position.y, 0 ] } visible={ visible }>
-                <sphereGeometry />
-                <meshStandardMaterial color={ color } />
-            </mesh>
-
-            <mesh castShadow ref={ cube } position-x={ 2 } position-y={ 1 } scale={ scale }>
-                <boxGeometry />
-                <meshStandardMaterial color="mediumpurple" />
-            </mesh>
-        </Stage>
-
-        {/* <mesh receiveShadow position-y={ 0 } rotation-x={ - Math.PI * 0.5 } scale={ 10 }>
-            <planeGeometry />
-            <meshStandardMaterial color="greenyellow" />
-        </mesh> */}
+        <ContactShadows
+            position-y={ -1.4 }
+            opacity={ 0.4 }
+            scale={ 5 }
+            blur={ 2.4 }
+        />
 
     </>
 }
