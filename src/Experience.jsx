@@ -1,6 +1,6 @@
-import { OrbitControls } from '@react-three/drei'
+import { OrbitControls, useGLTF } from '@react-three/drei'
 import { Perf } from 'r3f-perf'
-import { BallCollider, CuboidCollider, Physics, RigidBody } from '@react-three/rapier'
+import { BallCollider, CuboidCollider, CylinderCollider, Physics, RigidBody } from '@react-three/rapier'
 import { useRef, useState } from 'react'
 import { useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
@@ -28,6 +28,8 @@ export default function Experience()
         // hitSound.volume = Math.random()
         // hitSound.play()
     }
+
+    const hamburger = useGLTF('./hamburger.glb')
 
     useFrame((state) => {
         const time = state.clock.getElapsedTime()
@@ -143,7 +145,13 @@ export default function Experience()
                 </mesh>
             </RigidBody>
         
+            <RigidBody colliders={ false } position={ [ 0, 4, 0 ] }>
+                <primitive object={ hamburger.scene } scale={ 0.25 } />
+                <CylinderCollider args={ [ 0.5, 1.25 ] } />
+            </RigidBody>
+
         </Physics>
+
     
     </>
 }
