@@ -210,7 +210,7 @@ function Bounds({ length = 1 }) {
                 position={ [ -2.15, 0.75, -(length * 2) + 2 ] }
                 geometry={ boxGeometry }
                 material={ wallMaterial }
-                scale={ [ 0.3, 1.5, 4* length ] }
+                scale={ [ 0.3, 1.5, 4 * length ] }
                 castShadow
             />
             
@@ -223,7 +223,7 @@ function Bounds({ length = 1 }) {
             />
 
             <CuboidCollider
-                args={ [ 1, 1, 1 ] }
+                args={ [ 2, 0.1, 2 * length ] }
                 position={ [ 0, -0.1, -(length * 2) + 2 ] }
                 restitution={ 0.2 }
                 friction={ 1 }
