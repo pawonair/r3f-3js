@@ -22,8 +22,8 @@ export default function Interface() {
             
             <div className="raw">
                 <div className={ `key ${ leftward ? 'active' : '' }` }></div>
-                <div className={ `key ${ rightward ? 'active' : '' }` }></div>
                 <div className={ `key ${ backward ? 'active' : '' }` }></div>
+                <div className={ `key ${ rightward ? 'active' : '' }` }></div>
             </div>
             
             <div className="raw">
